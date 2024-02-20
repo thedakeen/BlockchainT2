@@ -1,0 +1,28 @@
+<%- include("base_layout.ejs") %>
+
+<form action='/user/login' method='POST' novalidate>
+    <% if (error) {%>
+    <div class='error'><%=error %></div>
+    <% }%>
+    <div>
+
+        <label>Email:</label>
+        <% if (emailError) {%>
+        <div class='error'><%=emailError.msg %></div>
+        <% }%>
+        <input type='email' name='email'>
+    </div>
+    <div>
+
+        <label>Password:</label>
+        <% if (passwordError) {%>
+        <div class='error'><%=passwordError.msg %></div>
+        <% }%>
+        <input type='password' name='password'>
+    </div>
+    <div>
+        <input type='submit' value='Login'>
+    </div>
+</form>
+
+<%- include("footer_partial.ejs") %>

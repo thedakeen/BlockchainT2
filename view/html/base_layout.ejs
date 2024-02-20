@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title><%=title %></title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <script src="/js/index.js"></script>
+    <!-- <script src="./metamask-onboarding.bundle.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.3.5/dist/web3.min.js"></script>
+    <!-- <link rel='shortcut icon' href='/static/img/favicon.ico' type='image/x-icon'> --->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700"
+    />
+  </head>
+  <body>
+    <header>
+      <h1><a href="/">Web3Project</a></h1>
+    </header>
+    <nav>
+      <div>
+        <a href="/">Home</a>
+      </div>
+      <div>
+        <% if(IsAuthorized) {%>
+        <a href="/user/profile">Profile</a>
+        <a href="/user/friends">Friends</a>
+        <form action="/user/logout" method="POST">
+          <button>Logout</button>
+        </form>
+        <%} else {%>
+        <a href="/user/register">Register</a>
+        <a href="/user/login">Login</a>
+        <% } %>
+      </div>
+    </nav>
+    <main></main>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<%- include("base_layout.ejs") %>
+<main>
+  <h1>Friends</h1>
+
+  <h2>Requests</h2>
+  <ul id="friendRequests">
+    <% friendRequests.forEach(function(request) { %>
+    <li>
+      <%= request.name %>
+      <button
+        class="acceptRequest"
+        data-request-id="<%= request._id %>"
+        data-user-id="<%= currentUserId %>"
+      >
+        Accept
+      </button>
+      <button
+        class="declineRequest"
+        data-request-id="<%= request._id %>"
+        data-user-id="<%= currentUserId %>"
+      >
+        Decline
+      </button>
+    </li>
+    <% }) %>
+  </ul>
+
+  <h2>Friendlist</h2>
+  <ul id="friendsList">
+    <% friends.forEach(function(friend) { %>
+    <li><a href="/user/profile/<%= friend._id %>"><%= friend.name %></a></li>
+    <% }) %>
+  </ul>
+</main>
+<%- include("footer_partial.ejs") %>

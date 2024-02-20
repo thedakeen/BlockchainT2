@@ -1,0 +1,37 @@
+<%- include("base_layout.ejs") %>
+<main>
+  <h1><%= user.name %>'s Profile</h1>
+  <div class="profile-info">
+    <% if (wallet) { %>
+    <p>Metamask wallet: <%= wallet %></p>
+    <% } else if (isCurrentUser) { %>
+    <button id="connectButton">Connect Metamask</button>
+    <% } %> <% if (isCurrentUser) { %>
+    <form
+      action="/user/profile/avatar"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <input type="file" name="avatar" />
+      <button type="submit">Upload Avatar</button>
+    </form>
+    <% } %>
+    <img
+      src="/uploads/avatars/<%= userId %>.jpg"
+      alt="Avatar"
+      class="avatar-image"
+      onerror="this.onerror=null; this.src='/uploads/avatars/avatar.png'"
+    />
+    <% if (!isCurrentUser) { %>
+    <button
+      id="addFriendButton"
+      data-user-id="<%= currentUser._id %>"
+      data-friend-id="<%= user._id %>"
+    >
+      Add friend
+    </button>
+
+    <% } %>
+  </div>
+</main>
+<%- include("footer_partial.ejs") %>
