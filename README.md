@@ -36,7 +36,7 @@ MongoDB: MongoDB database is used to store data about users and their friends.
 
 Bcrypt: To securely hash user passwords during registration and verify passwords at login.
 
-#### Routes
+#### Routes:
 
  Routes have also been added to the Social Network application to handle various requests.
  Below is the code of the routes implemented using Express.js:
