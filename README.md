@@ -5,7 +5,9 @@ This our project is a social network web application developed using Node.js, Ex
 Registration and Login to the System:
 The /user/register page provides the ability to register a new user with a name, email and password.
 The /user/login page is for logging in to the system. If the login attempt fails, appropriate errors are displayed.
+
 ![image](https://github.com/Ababananas/README.md/assets/147140948/003b37bb-1e13-4549-a180-7b611ad1eb5d)
+
 ![image](https://github.com/Ababananas/README.md/assets/147140948/89dae3a8-4a0f-4dff-bde1-0b0306549f2e)
 
 We have also created a User Profile:
