@@ -71,10 +71,10 @@ const login = async (req, res) => {
 
     req.session.authorized = true;
     req.session.userId = user._id;
-    req.session.user({
-      id: user._id,
-      wallet: user.walletAddress,
-    });
+    // req.session.user({
+    //   id: user._id,
+    //   wallet: user.walletAddress,
+    // });
 
     res.redirect("/");
   } catch (e) {
@@ -177,6 +177,7 @@ const friendsPageForm = async (req, res) => {
       IsAuthorized: IsAuthorized,
       friendRequests: user.friendRequests,
       friends: user.friends,
+      friendsCount: user.friendsCount,
     });
   } catch (error) {
     console.error(error);
@@ -335,8 +336,12 @@ const acceptFriendRequest = async (req, res) => {
         .includes(requestId.toString())
     ) {
       user.friendRequests.pull(requestId);
+
       user.friends.push(requestId);
       requestingUser.friends.push(userId);
+
+      user.friendsCount += 1;
+      requestingUser.friendsCount += 1;
 
       await user.save();
       await requestingUser.save();
