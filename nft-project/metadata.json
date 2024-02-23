@@ -1,0 +1,16 @@
+{
+    "name": "TopWeb3NFT",
+    "description": "A magic NFT Token that gives you access to write and comment posts",
+    "image": "https://ipfs.io/ipfs/QmQUyWGRp2SjC3nAJJHHFTBpzWRiWYV3vJ3HdrmggCoA9C",
+    "attributes": [
+      {
+        "trait_type": "Strength",
+        "value": "100"
+      },
+      {
+        "trait_type": "Rarity",
+        "value": "Legendary"
+      }
+    ]
+  }
+  

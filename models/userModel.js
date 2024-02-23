@@ -37,6 +37,11 @@ const UserSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+
+    hasTopWeb3NFT: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
