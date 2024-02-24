@@ -6,7 +6,7 @@ const contractABI =
 
 const tokenService = {
     provider: new ethers.providers.JsonRpcProvider(process.env.SEPOLIA_URL),
-    contractAddress: "0x16ac2EbC6065B1903f9dCF9b76a0E39Acab28f9f",
+    contractAddress: "0xcC6a4Be07f9d894C3b818Ed44fdb231a7Ac2c235",
     contractABI: contractABI,
 
     initContract: function () {
