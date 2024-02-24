@@ -1,9 +1,9 @@
 const { UserModel } = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
 
-// nft
-const nftService = require("../contractNftService/nftService.js");
-//
+const nftService = require("../contractService/nftService.js");
+const tokenService = require("../contractService/tokenService.js");
+
 
 const { validationResult } = require("express-validator");
 const loginForm = (req, res) => {
@@ -32,13 +32,13 @@ const login = async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const mapppedErrors = errors.mapped();
+      const mappedErrors = errors.mapped();
       return res.render("login_page", {
         title: "Login Page",
         IsAuthorized: req.session.authorized,
         error: null,
-        passwordError: mapppedErrors.password,
-        emailError: mapppedErrors.email,
+        passwordError: mappedErrors.password,
+        emailError: mappedErrors.email,
       });
     }
 
@@ -75,10 +75,7 @@ const login = async (req, res) => {
 
     req.session.authorized = true;
     req.session.userId = user._id;
-    // req.session.user({
-    //   id: user._id,
-    //   wallet: user.walletAddress,
-    // });
+
 
     res.redirect("/");
   } catch (e) {
@@ -100,17 +97,6 @@ const registrationForm = (req, res) => {
 
 const registration = async (req, res) => {
   try {
-    const errorFormatter = ({
-      location,
-      msg,
-      param,
-      value,
-      nestedErrors,
-      path,
-    }) => {
-      return {};
-    };
-
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const mapppedErrors = errors.mapped();
@@ -132,7 +118,7 @@ const registration = async (req, res) => {
       passwordHash: passwordHashed,
     });
 
-    const user = await doc.save();
+    await doc.save();
 
     res.redirect("/user/login");
   } catch (e) {
@@ -178,7 +164,6 @@ const friendsPageForm = async (req, res) => {
       IsAuthorized: IsAuthorized,
       currentUser: user,
       currentUserId: userId,
-      IsAuthorized: IsAuthorized,
       friendRequests: user.friendRequests,
       friends: user.friends,
       friendsCount: user.friendsCount,
@@ -188,24 +173,6 @@ const friendsPageForm = async (req, res) => {
     res.status(500).send("Internal server error");
   }
 };
-
-// const profileForm = async (req, res) => {
-//   let IsAuthorized = req.session.authorized;
-//   try {
-//     const userId = req.session.userId;
-//     const user = await UserModel.findById(userId);
-
-//     return res.render("profile_page", {
-//       title: "Profile",
-//       IsAuthorized: IsAuthorized,
-//       wallet: user.walletAddress,
-//       userId: userId,
-//     });
-//   } catch (e) {
-//     console.error(e);
-//     res.status(500).send("Internal server error");
-//   }
-// };
 
 const profileForm = async (req, res) => {
   let IsAuthorized = req.session.authorized;
@@ -219,11 +186,12 @@ const profileForm = async (req, res) => {
     }
 
     const isCurrentUser = requestedUserId === currentUserId;
-
     let currentUser = null;
-
+    let balance = null;
     if (!isCurrentUser) {
       currentUser = await UserModel.findById(currentUserId);
+    } else {
+      balance = await tokenService.getBalance(user.walletAddress)
     }
 
     res.render("profile_page", {
@@ -234,6 +202,7 @@ const profileForm = async (req, res) => {
       isCurrentUser: isCurrentUser,
       wallet: user.walletAddress,
       userId: user._id,
+      balance: balance,
     });
   } catch (error) {
     console.error(error);
@@ -241,7 +210,7 @@ const profileForm = async (req, res) => {
   }
 };
 
-const profileWallet = async (req, res) => {
+const profile = async (req, res) => {
   const { walletAddress } = req.body;
   const userId = req.session.userId;
 
@@ -254,6 +223,7 @@ const profileWallet = async (req, res) => {
       title: "Profile",
       IsAuthorized: req.session.IsAuthorized,
       wallet: user.walletAddress,
+      osop: 123,
     });
   } catch (error) {
     console.error(error);
@@ -426,7 +396,7 @@ module.exports = {
   logout,
   home,
   profileForm,
-  profileWallet,
+  profile,
   profileGetWalletAddress,
   updateAvatar,
   friendsPageForm,
