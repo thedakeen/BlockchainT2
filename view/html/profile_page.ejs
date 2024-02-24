@@ -33,5 +33,53 @@
 
     <% } %>
   </div>
+  <% if (isCurrentUser) { %> <% if (hasTopWeb3NFT) { %>
+  <form action="/user/profile/addPost" method="POST">
+    <textarea name="content" required></textarea>
+    <button type="submit">Create post</button>
+  </form>
+  <% } else { %>
+  <h1>
+    Do you want to make posts? Link Metamask wallet and add at least 5 friends
+  </h1>
+  <% } %> <% } %> <% if (posts.length > 0) { %>
+  <div class="posts">
+    <% posts.forEach(post => { %>
+    <div class="post">
+      <h2><%= user.name %></h2>
+      <p><%= post.content %></p>
+      <small>Posted: <%= post.createdAt.toDateString() %></small>
+      <div class="comment-section">
+        <% if (post.comments && post.comments.length > 0) { %> <%
+        post.comments.forEach(comment => { %>
+        <div class="comment">
+          <strong
+            ><a href="/user/profile/<%= comment.author._id %>"
+              ><%= comment.author.name %>:</a
+            ></strong
+          >
+          <%= comment.content %>
+        </div>
+        <% }) %> <% } %> <% if (currentUser.hasTopWeb3NFT) { %>
+        <form class="add-comment-form" action="/addComment" method="POST">
+          <input
+            type="text"
+            name="content"
+            placeholder="Add a comment..."
+            required
+          />
+          <input type="hidden" name="postId" value="<%= post._id %>" />
+          <button type="submit">Comment</button>
+        </form>
+        <% } else { %>
+        <p><i>Only NFT holders can add comments.</i></p>
+        <% } %>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% } else { %>
+  <p>No posts yet</p>
+  <% } %>
 </main>
 <%- include("footer_partial.ejs") %>
