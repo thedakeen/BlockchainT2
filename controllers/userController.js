@@ -1,4 +1,5 @@
 const { UserModel } = require("../models/userModel.js");
+const { PostModel } = require("../models/postModel.js");
 const bcrypt = require("bcrypt");
 
 // nft
@@ -152,17 +153,27 @@ const logout = (req, res) => {
   });
 };
 
-const home = (req, res) => {
+const home = async (req, res) => {
   let IsAuthorized = req.session.authorized;
   if (!IsAuthorized) {
     IsAuthorized = false;
   }
   const userId = req.session.userId;
-  res.render("home_page", {
-    title: "Home Page",
-    IsAuthorized: IsAuthorized,
-    userId: userId,
-  });
+  try {
+    const posts = await PostModel.find({})
+      .populate("author", "name")
+      .sort({ createdAt: -1 });
+
+    res.render("home_page", {
+      title: "Home Page",
+      IsAuthorized: IsAuthorized,
+      userId: userId,
+      posts,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
 };
 
 const friendsPageForm = async (req, res) => {
@@ -218,6 +229,19 @@ const profileForm = async (req, res) => {
       return res.status(404).send("User not found");
     }
 
+    const hasTopWeb3NFT = user.hasTopWeb3NFT;
+    console.log(PostModel);
+    const posts = await PostModel.find({ author: requestedUserId })
+      .populate({
+        path: "comments",
+        populate: {
+          path: "author",
+          model: "User",
+          select: "name",
+        },
+      })
+      .sort({ createdAt: -1 }); // user's posts
+
     const isCurrentUser = requestedUserId === currentUserId;
 
     let currentUser = null;
@@ -234,6 +258,8 @@ const profileForm = async (req, res) => {
       isCurrentUser: isCurrentUser,
       wallet: user.walletAddress,
       userId: user._id,
+      posts: posts,
+      hasTopWeb3NFT: hasTopWeb3NFT,
     });
   } catch (error) {
     console.error(error);
@@ -349,7 +375,7 @@ async function checkAndAwardNFT(userId) {
 const acceptFriendRequest = async (req, res) => {
   const { userId, requestId } = req.body;
 
-  console.log("Accepting friend request with data:", { userId, requestId });
+  // console.log("Accepting friend request with data:", { userId, requestId });
 
   try {
     const user = await UserModel.findById(userId);
