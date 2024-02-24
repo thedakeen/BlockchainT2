@@ -2,8 +2,9 @@ const { UserModel } = require("../models/userModel.js");
 const { PostModel } = require("../models/postModel.js");
 const bcrypt = require("bcrypt");
 
-// nft
-const nftService = require("../contractNftService/nftService.js");
+// nft and erc-20
+const nftService = require("../contractService/nftService.js");
+const tokenService = require("../contractService/tokenService.js");
 //
 
 const { validationResult } = require("express-validator");
@@ -245,9 +246,12 @@ const profileForm = async (req, res) => {
     const isCurrentUser = requestedUserId === currentUserId;
 
     let currentUser = null;
+    let balance = null;
 
     if (!isCurrentUser) {
       currentUser = await UserModel.findById(currentUserId);
+    } else {
+      balance = await tokenService.getBalance(user.walletAddress);
     }
 
     res.render("profile_page", {
@@ -260,6 +264,7 @@ const profileForm = async (req, res) => {
       userId: user._id,
       posts: posts,
       hasTopWeb3NFT: hasTopWeb3NFT,
+      balance: balance,
     });
   } catch (error) {
     console.error(error);

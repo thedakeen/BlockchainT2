@@ -4,7 +4,9 @@
   <div class="profile-info">
     <% if (wallet) { %>
     <p>Metamask wallet: <%= wallet %></p>
-    <% } else if (isCurrentUser) { %>
+    <% if (balance) { %>
+    <p>Balance: <%= balance%></p>
+    <%}%> <% } else if (isCurrentUser) { %>
     <button id="connectButton">Connect Metamask</button>
     <% } %> <% if (isCurrentUser) { %>
     <form
