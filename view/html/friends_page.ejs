@@ -2,6 +2,7 @@
 <main>
   <h1>Friends</h1>
 
+  <% if (friendRequests.length > 0) { %>
   <h2>Requests</h2>
   <ul id="friendRequests">
     <% friendRequests.forEach(function(request) { %>
@@ -24,8 +25,11 @@
     </li>
     <% }) %>
   </ul>
+  <% } else { %>
+  <p>No requests yet</p>
+  <% } %>
 
-  <h2>Friendlist</h2>
+  <h2>Friendlist (<%= friendsCount %>)</h2>
   <ul id="friendsList">
     <% friends.forEach(function(friend) { %>
     <li><a href="/user/profile/<%= friend._id %>"><%= friend.name %></a></li>

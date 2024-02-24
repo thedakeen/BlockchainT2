@@ -25,12 +25,23 @@ const UserSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+
+    friendsCount: {
+      type: Number,
+      default: 0,
+    },
+
     friendRequests: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
     ],
+
+    hasTopWeb3NFT: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

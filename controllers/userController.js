@@ -1,6 +1,10 @@
 const { UserModel } = require("../models/userModel.js");
 const bcrypt = require("bcrypt");
 
+// nft
+const nftService = require("../contractNftService/nftService.js");
+//
+
 const { validationResult } = require("express-validator");
 const loginForm = (req, res) => {
   try {
@@ -71,10 +75,10 @@ const login = async (req, res) => {
 
     req.session.authorized = true;
     req.session.userId = user._id;
-    req.session.user({
-      id: user._id,
-      wallet: user.walletAddress,
-    });
+    // req.session.user({
+    //   id: user._id,
+    //   wallet: user.walletAddress,
+    // });
 
     res.redirect("/");
   } catch (e) {
@@ -177,6 +181,7 @@ const friendsPageForm = async (req, res) => {
       IsAuthorized: IsAuthorized,
       friendRequests: user.friendRequests,
       friends: user.friends,
+      friendsCount: user.friendsCount,
     });
   } catch (error) {
     console.error(error);
@@ -316,6 +321,31 @@ const sendFriendRequest = async (req, res) => {
   }
 };
 
+//// CHECK AMOUNT OF FRIENDS AND GIVE NFT
+async function checkAndAwardNFT(userId) {
+  try {
+    const user = await UserModel.findById(userId);
+    const friendsCount = user.friends.length;
+
+    if (friendsCount >= 5 && !user.hasTopWeb3NFT) {
+      const tokenURI = "ipfs://QmSMBXnRC2n9aGkxbGh83Doib4jiKfJ8fb56Qtg74ZGgTL";
+      const awarded = await nftService.awardNFT(user.walletAddress, tokenURI);
+
+      if (awarded) {
+        user.hasTopWeb3NFT = true;
+        await user.save();
+        console.log(
+          `NFT was successfully issued to the user with ID ${userId}`
+        );
+      }
+    }
+  } catch (error) {
+    console.error(`Error with issuing NFT to user with ID ${userId}: ${error}`);
+  }
+}
+
+////
+
 const acceptFriendRequest = async (req, res) => {
   const { userId, requestId } = req.body;
 
@@ -335,11 +365,18 @@ const acceptFriendRequest = async (req, res) => {
         .includes(requestId.toString())
     ) {
       user.friendRequests.pull(requestId);
+
       user.friends.push(requestId);
       requestingUser.friends.push(userId);
 
+      user.friendsCount += 1;
+      requestingUser.friendsCount += 1;
+
       await user.save();
       await requestingUser.save();
+
+      await checkAndAwardNFT(user._id);
+      await checkAndAwardNFT(requestingUser._id);
 
       res.status(200).send("Friend request accepted");
     } else {

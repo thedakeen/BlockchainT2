@@ -1,4 +1,6 @@
 /node_modules
-/uploads
+/uploads/avatars/*
 /nft-project/node_modules
 /nft-project/README.md
+/nft-project/.env
+/.env
