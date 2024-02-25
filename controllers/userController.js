@@ -9,38 +9,30 @@ const tokenService = require("../contractService/tokenService.js");
 
 const { validationResult } = require("express-validator");
 const loginForm = (req, res) => {
-  try {
-    const error = req.session.message.loginError;
-    delete req.session.message.loginError;
+  let error = null
+  if(typeof req.session.message !== "undefined") {
+    if(typeof  req.session.message.loginError !== "undefined" && req.session.message.loginError.length !== 0){
+      error = req.session.message.loginError;
+      delete req.session.message.loginError;
+    }
+  }
     res.render("login_page", {
       title: "Login Page",
       IsAuthorized: req.session.authorized,
       error: error,
-      passwordError: null,
-      emailError: null,
     });
-  } catch {
-    res.render("login_page", {
-      title: "Login Page",
-      IsAuthorized: req.session.authorized,
-      error: null,
-      passwordError: null,
-      emailError: null,
-    });
-  }
 };
 
 const login = async (req, res) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const mapppedErrors = errors.mapped();
+      const mappedErrors = errors.mapped();
       return res.render("login_page", {
         title: "Login Page",
         IsAuthorized: req.session.authorized,
-        error: null,
-        passwordError: mapppedErrors.password,
-        emailError: mapppedErrors.email,
+        passwordError: mappedErrors.password,
+        emailError: mappedErrors.email,
       });
     }
 
@@ -53,8 +45,6 @@ const login = async (req, res) => {
         title: "Login Page",
         IsAuthorized: req.session.authorized,
         error: "Wrong login or password",
-        passwordError: null,
-        emailError: null,
       });
       return;
     }
@@ -69,18 +59,12 @@ const login = async (req, res) => {
         title: "Login Page",
         IsAuthorized: req.session.authorized,
         error: "Wrong login or password",
-        passwordError: null,
-        emailError: null,
       });
       return;
     }
 
     req.session.authorized = true;
     req.session.userId = user._id;
-    // req.session.user({
-    //   id: user._id,
-    //   wallet: user.walletAddress,
-    // });
 
     res.redirect("/");
   } catch (e) {
@@ -94,34 +78,21 @@ const registrationForm = (req, res) => {
   res.render("register_page", {
     title: "Register Page",
     IsAuthorized: req.session.authorized,
-    nameError: null,
-    passwordError: null,
-    emailError: null,
   });
 };
 
 const registration = async (req, res) => {
   try {
-    const errorFormatter = ({
-      location,
-      msg,
-      param,
-      value,
-      nestedErrors,
-      path,
-    }) => {
-      return {};
-    };
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const mapppedErrors = errors.mapped();
+      const mappedErrors = errors.mapped();
       return res.render("register_page", {
         title: "Register Page",
         IsAuthorized: req.session.authorized,
-        nameError: mapppedErrors.name,
-        passwordError: mapppedErrors.password,
-        emailError: mapppedErrors.email,
+        nameError: mappedErrors.name,
+        passwordError: mappedErrors.password,
+        emailError: mappedErrors.email,
       });
     }
 
@@ -134,12 +105,12 @@ const registration = async (req, res) => {
       passwordHash: passwordHashed,
     });
 
-    const user = await doc.save();
+   await doc.save();
 
     res.redirect("/user/login");
   } catch (e) {
     res.status(500).json({
-      message: "Registration failed",
+      message: e,
     });
   }
 };
@@ -159,6 +130,8 @@ const home = async (req, res) => {
   if (!IsAuthorized) {
     IsAuthorized = false;
   }
+
+
   const userId = req.session.userId;
   try {
     const posts = await PostModel.find({})
@@ -190,34 +163,15 @@ const friendsPageForm = async (req, res) => {
       IsAuthorized: IsAuthorized,
       currentUser: user,
       currentUserId: userId,
-      IsAuthorized: IsAuthorized,
       friendRequests: user.friendRequests,
       friends: user.friends,
-      friendsCount: user.friendsCount,
+      friendsCount: user.friends.length,
     });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal server error");
   }
 };
-
-// const profileForm = async (req, res) => {
-//   let IsAuthorized = req.session.authorized;
-//   try {
-//     const userId = req.session.userId;
-//     const user = await UserModel.findById(userId);
-
-//     return res.render("profile_page", {
-//       title: "Profile",
-//       IsAuthorized: IsAuthorized,
-//       wallet: user.walletAddress,
-//       userId: userId,
-//     });
-//   } catch (e) {
-//     console.error(e);
-//     res.status(500).send("Internal server error");
-//   }
-// };
 
 const profileForm = async (req, res) => {
   let IsAuthorized = req.session.authorized;
@@ -244,15 +198,14 @@ const profileForm = async (req, res) => {
       .sort({ createdAt: -1 }); // user's posts
 
     const isCurrentUser = requestedUserId === currentUserId;
-
     let currentUser = null;
     let balance = null;
-
     if (!isCurrentUser) {
       currentUser = await UserModel.findById(currentUserId);
     } else {
       balance = await tokenService.getBalance(user.walletAddress);
     }
+
 
     res.render("profile_page", {
       title: `${user.name}'s Profile`,
@@ -265,6 +218,8 @@ const profileForm = async (req, res) => {
       posts: posts,
       hasTopWeb3NFT: hasTopWeb3NFT,
       balance: balance,
+      isFriends: user.friends.includes(currentUserId),
+      isRequested: user.friendRequests.includes(currentUserId)
     });
   } catch (error) {
     console.error(error);
@@ -421,9 +376,6 @@ const acceptFriendRequest = async (req, res) => {
 
 const declineFriendRequest = async (req, res) => {
   const { userId, requestId } = req.body;
-
-  // console.log("Declining friend request with data:", { userId, requestId });
-
   try {
     const user = await UserModel.findById(userId);
     const requestingUser = await UserModel.findById(requestId);

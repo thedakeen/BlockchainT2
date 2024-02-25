@@ -22,7 +22,7 @@ const tokenService = {
     const contract = this.initContract().connect(signer);
 
     try {
-      const balance = await contract.balanceOf(userAddress);
+      const balance = await contract.balanceOf(userAddress) / 10 ** 18;
       console.log(`Balance of ${userAddress}: ${balance}`);
       return balance.toString();
     } catch (error) {

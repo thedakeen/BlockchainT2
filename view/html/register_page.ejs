@@ -1,9 +1,10 @@
 <%- include("base_layout.ejs") %>
+<main>
 <form action='/user/register' method='POST' novalidate>
     <div>
 
         <label>Name:</label>
-        <% if (nameError) {%>
+        <% if (typeof nameError !== 'undefined') {%>
         <div class='error'><%=nameError.msg %></div>
         <% }%>
         <input type='text' name='name'>
@@ -11,7 +12,7 @@
     <div>
 
         <label>Email:</label>
-        <% if (emailError) {%>
+        <% if (typeof emailError !== 'undefined') {%>
         <div class='error'><%=emailError.msg %></div>
         <% }%>
         <input type='email' name='email'>
@@ -19,7 +20,7 @@
     <div>
 
         <label>Password:</label>
-        <% if (passwordError) {%>
+        <% if (typeof passwordError !== 'undefined') {%>
         <div class='error'><%=passwordError.msg %></div>
         <% }%>
         <input type='password' name='password'>
@@ -28,5 +29,5 @@
         <input type='submit' value='Signup'>
     </div>
 </form>
-
+</main>
 <%- include("footer_partial.ejs") %>

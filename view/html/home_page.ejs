@@ -1,22 +1,17 @@
 <%- include("base_layout.ejs") %>
 <main>
-  <% if (!IsAuthorized) { %> Authorized: <%= IsAuthorized %> UserId: <%= userId
-  %>
-  <p>Sign in to view posts</p>
-  <% } else { %>
-  <p>Share your ID to make friends! <%= userId %></p>
   <% if(posts.length > 0) { %> <% posts.forEach(post => { %>
   <div class="post">
     <small><%= post.createdAt.toDateString() %></small>
-    <h2>
+    <p>
       <a href="/user/profile/<%= post.author._id %>"><%= post.author.name %></a>
-    </h2>
+    </p>
     <p><%= post.content %></p>
 
     <p><i>Go to user's profile to see comments.</i></p>
   </div>
   <% }) %> <% } else { %>
   <p>No posts to display</p>
-  <% } %> <% } %>
+  <% } %>
 </main>
 <%- include("footer_partial.ejs") %>

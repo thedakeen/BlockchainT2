@@ -1,87 +1,127 @@
 <%- include("base_layout.ejs") %>
 <main>
-  <h1><%= user.name %>'s Profile</h1>
-  <div class="profile-info">
-    <% if (wallet) { %>
-    <p>Metamask wallet: <%= wallet %></p>
-    <% if (balance) { %>
-    <p>Balance: <%= balance%></p>
-    <%}%> <% } else if (isCurrentUser) { %>
-    <button id="connectButton">Connect Metamask</button>
-    <% } %> <% if (isCurrentUser) { %>
-    <form
-      action="/user/profile/avatar"
-      method="post"
-      enctype="multipart/form-data"
-    >
-      <input type="file" name="avatar" />
-      <button type="submit">Upload Avatar</button>
-    </form>
-    <% } %>
-    <img
-      src="/uploads/avatars/<%= userId %>.jpg"
-      alt="Avatar"
-      class="avatar-image"
-      onerror="this.onerror=null; this.src='/uploads/avatars/avatar.png'"
-    />
-    <% if (!isCurrentUser) { %>
-    <button
-      id="addFriendButton"
-      data-user-id="<%= currentUser._id %>"
-      data-friend-id="<%= user._id %>"
-    >
-      Add friend
-    </button>
+  <h1 class="pageName"><%= user.name %>'s Profile</h1>
 
+  <div class="row">
+    <div class="column">
+      <% if (isCurrentUser) { %>
+        <form action="/user/profile/avatar" method="post" enctype="multipart/form-data">
+          <div class="avatar">
+            <img
+                    src="/uploads/avatars/<%= userId %>.jpg"
+                    alt="Avatar"
+                    class="avatar-image"
+                    onerror="this.onerror=null; this.src='/uploads/avatars/avatar.jpg'"
+            />
+            <input type="file" name="avatar" id="avatar-input">
+            <button type="submit" class="classicButton">Upload Avatar</button>
+          </div>
+        </form>
+      <% } else { %>
+          <div class="avatar">
+              <img
+                      src="/uploads/avatars/<%= userId %>.jpg"
+                      alt="Avatar"
+                      class="avatar-image"
+                      onerror="this.onerror=null; this.src='/uploads/avatars/avatar.jpg'"
+              />
+          </div>
+          <%}%>
+          <% if (!isCurrentUser && !isFriends && !isRequested) { %>
+              <button
+                      class="classicButton"
+                      id="addFriendButton"
+                      data-user-id="<%= currentUser._id %>"
+                      data-friend-id="<%= user._id %>"
+              >
+                  Add friend
+              </button>
+          <% } %>
+
+          <% if (!isCurrentUser && !isFriends && isRequested) { %>
+              <button
+                      class="NAclassicButton"
+              >
+                  Requested
+              </button>
+          <% } %>
+    </div>
+
+    <div class="column">
+      <p>Id: <%= user._id %></p>
+      <p>Name: <%= user.name %></p>
+      <p>Email: <%= user.email %></p>
+      <%if(user.hasTopWeb3NFT){%>
+        <p>TopWEB3: Yes</p>
+      <%} else {%>
+        <p>TopWEB3: No</p>
+      <%}%>
+      <% if (wallet) { %>
+        <p>Metamask wallet: <%= wallet.toString().slice(0,7) %>...<%= wallet.toString().slice(31,36) %></p>
+        <% if (balance) { %>
+          <p>Balance: <%= balance%> DAA's</p>
+        <%}%> <% } else if (isCurrentUser) { %>
+        <button id="connectButton" class="MetaButton">Connect Metamask</button>
+      <% } %>
+    </div>
+  </div>
+
+
+  <div class="row">
+
+    <% if (isCurrentUser) { %>
+      <p class="pageName margin">Create Post:</p>
+      <% if (hasTopWeb3NFT) { %>
+      <form action="/user/profile/addPost" method="POST">
+        <textarea name="content" required></textarea>
+        <button class="classicButton" type="submit">Post</button>
+      </form>
+    <% } else { %>
+      <h2>
+        Do you want to make posts? Link Metamask wallet and add at least 5 friends
+      </h2>
+    <% } %>
+      <% } %>
+      <p class="pageName margin"><%= user.name %>'s Posts:</p>
+      <% if (posts.length > 0) { %>
+      <div class="posts">
+        <% posts.forEach(post => { %>
+          <div class="post">
+            <h2><%= user.name %></h2>
+            <p><%= post.content %></p>
+            <small>Posted: <%= post.createdAt.toDateString() %></small>
+            <div class="comment-section">
+              <% if (post.comments && post.comments.length > 0) { %> <%
+              post.comments.forEach(comment => { %>
+                <div class="comment">
+                  <strong
+                  ><a href="/user/profile/<%= comment.author._id %>"
+                    ><%= comment.author.name %>:</a
+                    ></strong
+                  >
+                  <%= comment.content %>
+                </div>
+              <% }) %> <% } %> <% if (currentUser.hasTopWeb3NFT) { %>
+                <form class="add-comment-form" action="/addComment" method="POST">
+                  <input
+                          type="text"
+                          name="content"
+                          placeholder="Add a comment..."
+                          required
+                  />
+                  <input type="hidden" name="postId" value="<%= post._id %>" />
+                  <button class="classicButton" type="submit">Comment</button>
+                </form>
+              <% } else { %>
+                <p><i>Only NFT holders can add comments.</i></p>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <h1>No posts yet</h1>
     <% } %>
   </div>
-  <% if (isCurrentUser) { %> <% if (hasTopWeb3NFT) { %>
-  <form action="/user/profile/addPost" method="POST">
-    <textarea name="content" required></textarea>
-    <button type="submit">Create post</button>
-  </form>
-  <% } else { %>
-  <h1>
-    Do you want to make posts? Link Metamask wallet and add at least 5 friends
-  </h1>
-  <% } %> <% } %> <% if (posts.length > 0) { %>
-  <div class="posts">
-    <% posts.forEach(post => { %>
-    <div class="post">
-      <h2><%= user.name %></h2>
-      <p><%= post.content %></p>
-      <small>Posted: <%= post.createdAt.toDateString() %></small>
-      <div class="comment-section">
-        <% if (post.comments && post.comments.length > 0) { %> <%
-        post.comments.forEach(comment => { %>
-        <div class="comment">
-          <strong
-            ><a href="/user/profile/<%= comment.author._id %>"
-              ><%= comment.author.name %>:</a
-            ></strong
-          >
-          <%= comment.content %>
-        </div>
-        <% }) %> <% } %> <% if (currentUser.hasTopWeb3NFT) { %>
-        <form class="add-comment-form" action="/addComment" method="POST">
-          <input
-            type="text"
-            name="content"
-            placeholder="Add a comment..."
-            required
-          />
-          <input type="hidden" name="postId" value="<%= post._id %>" />
-          <button type="submit">Comment</button>
-        </form>
-        <% } else { %>
-        <p><i>Only NFT holders can add comments.</i></p>
-        <% } %>
-      </div>
-    </div>
-    <% }) %>
-  </div>
-  <% } else { %>
-  <p>No posts yet</p>
-  <% } %>
 </main>
 <%- include("footer_partial.ejs") %>

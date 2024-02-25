@@ -10,7 +10,7 @@ const authorizationCheck = (req, res, next) => {
     next()
 }
 
-const refuseLogIn = (req, res, next) => {
+const refuse = (req, res, next) => {
     if(req.session.authorized){
         return res.redirect("/")
     }
@@ -20,5 +20,5 @@ const refuseLogIn = (req, res, next) => {
 
 module.exports = {
     authorizationCheck,
-    refuseLogIn
+    refuse
 }

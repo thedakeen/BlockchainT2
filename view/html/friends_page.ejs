@@ -1,39 +1,54 @@
 <%- include("base_layout.ejs") %>
 <main>
-  <h1>Friends</h1>
+    <h1 class="pageName margin-button">My Friends (<%= friendsCount %>)</h1>
 
-  <% if (friendRequests.length > 0) { %>
-  <h2>Requests</h2>
-  <ul id="friendRequests">
-    <% friendRequests.forEach(function(request) { %>
-    <li>
-      <%= request.name %>
-      <button
-        class="acceptRequest"
-        data-request-id="<%= request._id %>"
-        data-user-id="<%= currentUserId %>"
-      >
-        Accept
-      </button>
-      <button
-        class="declineRequest"
-        data-request-id="<%= request._id %>"
-        data-user-id="<%= currentUserId %>"
-      >
-        Decline
-      </button>
-    </li>
-    <% }) %>
-  </ul>
-  <% } else { %>
-  <p>No requests yet</p>
-  <% } %>
-
-  <h2>Friendlist (<%= friendsCount %>)</h2>
   <ul id="friendsList">
     <% friends.forEach(function(friend) { %>
-    <li><a href="/user/profile/<%= friend._id %>"><%= friend.name %></a></li>
+    <li><img
+                src="/uploads/avatars/<%= friend._id %>.jpg"
+                alt="Avatar"
+                class="avatars-image-friends"
+                onerror="this.onerror=null; this.src='/uploads/avatars/avatar.jpg'"
+        />
+
+        <a href="/user/profile/<%= friend._id %>"><%= friend.name %></a></li>
     <% }) %>
   </ul>
+
+
+
+  <% if (friendRequests.length > 0) { %>
+    <h1 class="pageName margin">Requests</h1>
+    <ul id="friendRequests">
+      <% friendRequests.forEach(function(request) { %>
+        <li>
+            <img
+                    src="/uploads/avatars/<%= request._id %>.jpg"
+                    alt="Avatar"
+                    class="avatars-image-friends"
+                    onerror="this.onerror=null; this.src='/uploads/avatars/avatar.jpg'"
+            />
+          <p><%= request.name %></p>
+          <button
+                  class="acceptRequest"
+                  data-request-id="<%= request._id %>"
+                  data-user-id="<%= currentUserId %>"
+          >
+            Accept
+          </button>
+          <button
+                  class="declineRequest"
+                  data-request-id="<%= request._id %>"
+                  data-user-id="<%= currentUserId %>"
+          >
+            Decline
+          </button>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <h1 class="pageName margin">No requests yet</h1>
+  <% } %>
+
 </main>
 <%- include("footer_partial.ejs") %>
