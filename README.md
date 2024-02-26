@@ -78,6 +78,10 @@ When uploading an avatar, multer uses the storage settings defined in our code t
 
 >This allows us to use validators to check data at check-in and middleware to handle avatar uploads in our Express routes.
 
+## About our NFT Project
+
+
+
 :notebook: :black_nib: **Authors:**
 
 **Abai Akylzhanuly,Daulet Kenges, Ansar Amanzholov** :top:
