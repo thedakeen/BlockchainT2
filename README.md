@@ -92,6 +92,53 @@ We have created ERC-20 and also non-combustible NFT ERC-721.
 ![image](https://github.com/thedakeen/BlockchainT2/assets/147140948/3f85b71c-da1b-4e13-9014-80cd600fb4d5)
 
 
+### Scripts
+>The main function is an asynchronous function and serves as the entry point to the script.
+It uses ethers.getSigners() to retrieve the deployer's subscriber object (presumably the first account).
+>>Deployment Contract:
+It registers the address of the deployer account.
+ethers.getContractFactory("DAAToken") and ("TopWeb3NFT") is used to get the smart contract factory of "DAAToken" and "TopWeb3NFT".
+DAAToken.deploy() is called to deploy the contract, and the deployed contract instance is stored in the daaToken variable.
+>>>Logging the deployment information:
+Finally, the script logs the deployment information, in particular the address where the "DAAToken" and "TopWeb3NFT" contract is deployed.
+>>>>Error handling:
+The script uses the .then() block to terminate the process with code 0 (success) if there are no errors.
+If an error occurs, it logs it, sets the process exit code to 1 (indicating an error), and terminates.
+>>>>>Execution:
+The main function is called and the process exit code is set depending on the success or failure of the deployment.
+This script is suitable for deploying the "DAAToken" and "TopWeb3NFT" contract using the Hardhat framework
+
+![image](https://github.com/thedakeen/BlockchainT2/assets/147140948/68520029-f069-4150-8c66-b7d25999ef44)
+:eyes:
+![image](https://github.com/thedakeen/BlockchainT2/assets/147140948/f67f8f24-a05e-4030-9ebe-bc1e284671e3)
+
+**Smart-contracts:**
+>For smart contracts, we used ABI (Application Binary Interface) for a smart contract called "TopWeb3NFT", "DAAToken" written in Solidity. The contract includes various functions and events to manage NFTs (Non-Fungible Tokens) on the Ethereum blockchain.
+>>The contract defines three events: "Approval," "Transfer," and "TransferInfo." These events are triggered during specific actions in the contract and can be used for logging and external notification.
+
+**Test script for a smart contract named "Lock"**
+>This script defines a set of tests for the deployment and functionality of the "Lock" smart contract.
+The script uses various helper functions and libraries from Hardhat, such as time to handle time-related operations, loadFixture to configure fixtures, expect and chai for assertions.
+>>Fixture Setup:
+The deployOneYearLockFixture function is defined to set up and deploy the "Lock" contract with specific parameters, such as the lock duration, locked amount, etc.
+The fixture uses the loadFixture function from Hardhat to snapshot the state and reset the Hardhat Network in every test.
+>>>Deployment Tests:
+Three tests check if the deployment of the "Lock" contract sets the correct unlock time, owner, and successfully receives and stores the funds to lock.
+An additional test checks if the contract fails deployment when the unlock time is not in the future.
+>>>>Withdrawal Tests:
+Validation tests check that withdrawals revert with the correct error messages in different scenarios (too soon, called from another account, and successful withdrawal after the unlock time).
+An event test checks if the "Withdrawal" event is emitted with the correct arguments.
+A transfer test checks if the funds are transferred to the owner upon successful withdrawal.
+
+![image](https://github.com/thedakeen/BlockchainT2/assets/147140948/33d81fe1-ecab-49b0-b8b4-6949486ab806)
+![image](https://github.com/thedakeen/BlockchainT2/assets/147140948/c007d4db-d550-4691-a544-dad3caef339a)
+![image](https://github.com/thedakeen/BlockchainT2/assets/147140948/d3da6f14-4955-44d3-a9af-c95a16faf1d3)
+
+
+
+
+
+
 
 
 
