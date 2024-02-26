@@ -79,6 +79,19 @@ When uploading an avatar, multer uses the storage settings defined in our code t
 >This allows us to use validators to check data at check-in and middleware to handle avatar uploads in our Express routes.
 
 ## About our NFT Project
+We have created ERC-20 and also non-combustible NFT ERC-721.
+
+**ERC-20**
+
+![image](https://github.com/thedakeen/BlockchainT2/assets/147140948/f5cd2a1c-2ef3-4ad3-89da-074f82db464d)
+![image](https://github.com/thedakeen/BlockchainT2/assets/147140948/5c08fba1-561c-4164-b1a6-c88ee1a4b71e)
+![image](https://github.com/thedakeen/BlockchainT2/assets/147140948/21eb57ef-2108-4836-b050-5ee7931fe1e4)
+
+**ERC-721**
+
+![image](https://github.com/thedakeen/BlockchainT2/assets/147140948/3f85b71c-da1b-4e13-9014-80cd600fb4d5)
+
+
 
 
 
