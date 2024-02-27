@@ -135,7 +135,7 @@ A transfer test checks if the funds are transferred to the owner upon successful
 ![image](https://github.com/thedakeen/BlockchainT2/assets/147140948/d3da6f14-4955-44d3-a9af-c95a16faf1d3)
 
 
->NFT holders in your system have unique privileges such as the ability to create posts, leave comments and interact in the community. The interesting thing is that NFT holders are automatically given additional NFTs when they reach a certain level of activity, such as making 5 friends in the system. This is a way of encouraging participation and expanding the community through interaction with NFT holders.
+>NFT holders in your system have unique privileges such as the ability to create posts, leave comments and interact in the community. The interesting thing is that NFT holders are automatically given additional NFTs when they reach a certain level of activity, such as making 5 friends :couple: in the system. This is a way of encouraging participation and expanding the community through interaction with NFT holders. :yum:
 
 ![image_2024-02-25_23-12-28](https://github.com/thedakeen/BlockchainT2/assets/147140948/4d242314-e15f-4a7a-81b7-118d8b0fc014)
 ![image_2024-02-25_23-12-55](https://github.com/thedakeen/BlockchainT2/assets/147140948/c98c2a76-daf5-452c-ba4e-e45aaab67f03)
